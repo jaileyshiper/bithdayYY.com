@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Cake with Candle</title>  
+    <style>
+        /* Countdown container */
+        body {
+          
+            height: 100vh;
+            margin: 0;
+            background-color: #f8e8f8;
+          
+        }
+        .countdown {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 90vh;
+         
+            background-color: #f8e8f8;
+            font-family: sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Countdown timer */
+        #countdown {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: 24px;
+            color: #333;
+            z-index: 1000;
+        }
+
+        /* Hide the main content initially */
+        #main-content {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 95vh;
+            margin: 0;
+            background-color: #f8e8f8;
+            font-family: sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Audio shape */
+        .audio-shape {
+            width: 100px;
+            height: 100px;
+            background-color: pink;
+            border-radius: 50%; /* Makes it circular */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        /* Hover effect */
+        .audio-shape:hover {
+            transform: scale(1.1);
+        }
+
+        /* Spinning animation */
+        .spinning {
+            animation: spin 2s linear infinite;
+        }
+
+        /* Keyframes for spinning */
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Optional: icon style */
+        .audio-shape span {
+            font-size: 24px;
+            color: white;
+        }
+
+        /* Cake styles */
+        .cake {
+            position: relative;
+            width: 200px;
+            height: 250px;
+            margin-top: -30%;
+        }
+
+        .cake-layer {
+            position: absolute;
+            width: 100%;
+            border-radius: 10px;
+            background-color: pink;
+        }
+
+        .top {
+            top: 0;
+            height: 50px;
+            border-radius: 10px 10px 0 0;
+            width: 100px;
+            left: 45px;
+        }
+
+        .middle {
+            left: 20px;
+            top: 50px;
+            height: 60px;
+            width: 150px;
+        }
+
+        .bottom {
+            top: 110px;
+            height: 80px;
+            border-radius: 10px;
+        }
+
+        .cake-base {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 10px;
+            background-color: #d896d8;
+        }
+
+        .candles {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+        }
+
+        .candle {
+            position: relative;
+            width: 30px;
+            height: 60px;
+            background-color: transparent;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .candle.two {
+            width: 30px;
+            margin-top: -5%;
+        }
+
+        .candle.zero {
+            width: 30px;
+            margin-left: -15%;
+            margin-top: -5%;
+        }
+
+        .flame {
+            position: absolute;
+            top: 2px;
+            left: 50%;
+            width: 7px;
+            height: 11px;
+            background-color: orange;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            animation: flicker 1s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0% {
+                transform: translateX(-50%) scale(1);
+            }
+            50% {
+                transform: translateX(-50%) scale(1.2);
+            }
+            100% {
+                transform: translateX(-50%) scale(1);
+            }
+        }
+
+        /* Heart animation */
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            transform: rotate(-45deg);
+            animation: fall 6s infinite;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            top: -10px;
+            left: 0;
+        }
+
+        .heart::after {
+            left: 10px;
+            top: 0;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100%) rotate(-45deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(-45deg);
+                opacity: 0;
+            }
+        }
+
+        /* Additional styles for text */
+        h3 {
+            margin-left: 24%;
+            margin-top: 10%;
+            color: rgb(240, 234, 234);
+        }
+
+        .bottom img {
+            height: 90%;
+        }
+
+        h2 {
+            margin-left: 34%;
+            margin-top: -20%;
+            color: rgb(240, 234, 234);
+            font-size: 100%;
+        }
+
+        h4 {
+            color: #000;
+            margin-top: 20px;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: rgb(249, 177, 189);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+        }
+
+        button:hover {
+            background-color: pink;
+        }
+
+        /* Position hearts across the whole page */
+        .heart:nth-child(1) { left: 5%; top: -10%; animation-delay: 0s; }
+        .heart:nth-child(2) { left: 15%; top: -20%; animation-delay: 0.5s; }
+        .heart:nth-child(3) { left: 25%; top: -30%; animation-delay: 1s; }
+        .heart:nth-child(4) { left: 35%; top: -40%; animation-delay: 1.5s; }
+        .heart:nth-child(5) { left: 45%; top: -50%; animation-delay: 2s; }
+        .heart:nth-child(6) { left: 55%; top: -60%; animation-delay: 2.5s; }
+        .heart:nth-child(7) { left: 65%; top: -70%; animation-delay: 3s; }
+        .heart:nth-child(8) { left: 75%; top: -80%; animation-delay: 3.5s; }
+        .heart:nth-child(9) { left: 85%; top: -90%; animation-delay: 4s; }
+        .heart:nth-child(10) { left: 95%; top: -100%; animation-delay: 4.5s; }
+        .heart:nth-child(11) { left: 5%; top: -10%; animation-delay: 0s; }
+        .heart:nth-child(12) { left: 15%; top: -20%; animation-delay: 0.5s; }
+        .heart:nth-child(13) { left: 25%; top: -30%; animation-delay: 1s; }
+        .heart:nth-child(14) { left: 35%; top: -40%; animation-delay: 1.5s; }
+        .heart:nth-child(15) { left: 45%; top: -50%; animation-delay: 2s; }
+        .heart:nth-child(16) { left: 55%; top: -60%; animation-delay: 2.5s; }
+        .heart:nth-child(17) { left: 65%; top: -70%; animation-delay: 3s; }
+        .heart:nth-child(18) { left: 75%; top: -80%; animation-delay: 3.5s; }
+        .heart:nth-child(19) { left: 85%; top: -90%; animation-delay: 4s; }
+        .heart:nth-child(20) { left: 95%; top: -100%; animation-delay: 4.5s; }
+
+        /* Dance animation images */
+        .dance img {
+            width: 50%;
+            margin-left: -70%;
+            margin-top: 20%;
+            margin-bottom: 20%;
+            transform: scaleX(-1);
+        }
+
+        .dancee img {
+            width: 50%;
+            margin-left: 100%;
+            margin-top: -100%;
+            margin-bottom: 20%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Countdown Timer -->
+    <div class="countdown" id="countdownc">
+        <div id="countdown"><p id="timer">10:00</p></div>
+        
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content">
+        <div class="dance"><img src="téléchargement (2).gif" alt=""></div>
+        
+        <div class="cake">
+            <div class="cake-layer top"><h3>happy</h3></div>
+            <div class="cake-layer middle"><h3>birthday</h3></div>
+            <div class="cake-layer bottom"><img src="téléchargement (6).gif" alt=""><h2>POOKIE</h2></div>
+            <div class="cake-base"></div>
+            <div class="candles">
+                <div class="candle two">
+                    2
+                    <div class="flame"></div>
+                </div>
+                <div class="candle zero">
+                    0
+                    <div class="flame"></div>
+                </div>
+            </div>
+        </div>
+
+        <h4>Click on the button below to see your gift!</h4>
+        <button><a href="birthdayCart.html">Open</a></button>
+        <div class="dancee"><img src="téléchargement (2).gif" alt=""></div>
+        <!-- Falling hearts across the whole page -->
+        <div class="heart"></div>
+        <div class="heart"></div>
+        <div class="heart"></div>
+        <div class="heart"></div>
+        <div class="heart"></div>
+        <div class="heart"></div>
+        <div class="heart"></div>
+        <div class="heart"></div>
+        <div class="heart"></div>
+        <div class="heart"></div>
+        <div class="heart"></div>
+        <div class="heart"></div>
+        <div class="heart"></div>
+        <div class="heart"></div>
+        <div class="heart"></div>
+        <div class="heart"></div>
+        <div class="heart"></div>
+        <div class="heart"></div>
+        <div class="heart"></div>
+        <div class="heart"></div>
+        <audio id="myAudio" src="audio.mp3" loop></audio>
+        <div class="audio-shape" id="audioShape" onclick="togglePlay()">
+            <span>🎵</span>
+        </div>
+    </div>
+
+    <script>
+        // Countdown timer function
+        function startCountdown(duration) {
+            const endTime = Date.now() + duration;
+            const timerElement = document.getElementById('timer');
+
+            function updateTimer() {
+                const timeLeft = Math.max(0, endTime - Date.now());
+                const minutes = Math.floor(timeLeft / 60000);
+                const seconds = Math.floor((timeLeft % 60000) / 1000);
+                timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('countdownc').style.display = 'none';
+                    document.getElementById('main-content').style.display = 'flex';
+                }
+            }
+
+            updateTimer();
+            const timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        // Start a 10-second countdown
+        startCountdown(5000);
+
+        // Audio functionality
+        const audio = document.getElementById('myAudio');
+        const shape = document.getElementById('audioShape');
+
+        function togglePlay() {
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+        }
+
+        audio.onplay = function() {
+            shape.classList.add('spinning');
+        };
+
+        audio.onpause = function() {
+            shape.classList.remove('spinning');
+        };
+    </script>
+</body>
+</html>
+
